@@ -17,7 +17,7 @@ def read_prices(filename):
     return stock_prices
 
 def read_portfolio(filename):
-    '''Read the portfolio from the file and return a dict'''
+    '''Read the portfolio from the file and return a list'''
     with open(filename, 'rt') as file:
         lines = csv.reader(file)
         next(lines)
@@ -51,17 +51,49 @@ def compute_portfolio_current_value(portfolio: list, current_price: dict):
                 break
     return total_value
 
+def make_report(portfolio: list, prices: dict):
+    '''take lists of portfolio dicts and dict of prices, return a list of tuples of stock report'''
+    stock_report = []
+    for stock in portfolio:
+        for key in prices:
+            holding = []
+            try:
+                if stock['name'] == key:
+                    holding.append(stock['name'])
+                    holding.append(stock['shares'])
+                    holding.append(stock['price'])
+                    price_change = round((prices[key] - stock['price']),2)
+                    holding.append(price_change)
+                    stock_report.append(tuple(holding))
+                    break
+            except:
+                print('Something was wrong in key', key, prices[key])
+                    
+    return stock_report
+
+def print_report(report: list):
+    for r in report:
+        print('%10s %10d %10.2f %10.2f' %r)
+    print('\n')
+
 portfolio = read_portfolio('Data/portfolio.csv')
 current_price = read_prices('Data/prices.csv')
 
-portfolio_price = compute_portfolio_price(portfolio)
+print(portfolio,'\n')
+print(current_price,'\n')
+
+""" portfolio_price = compute_portfolio_price(portfolio)
 print('The portfolio price:', portfolio_price)
 
 current_value = compute_portfolio_current_value(portfolio, current_price)
-print('The current value of the portfolio:', current_value)
+print('The current value of the portfolio:', current_value) """
 
-gain_lost = current_value - portfolio_price
+""" gain_lost = current_value - portfolio_price
 if gain_lost > 0:
     print('The portfolio has gain:', gain_lost)
 else:
-    print('The portfolio has lost', round(abs(gain_lost),2))
+    print('The portfolio has lost', round(abs(gain_lost),2)) """
+
+report = make_report(portfolio, current_price)
+
+print_report(report)
