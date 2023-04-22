@@ -72,8 +72,8 @@ def make_report(portfolio: list, prices: dict):
     return stock_report
 
 def print_report(report: list):
-    for r in report:
-        print('%10s %10d %10.2f %10.2f' %r)
+    for name, shares, price, change in report:
+        print(f'{name:>10s} {shares:>10d} {"$"+str(price):>10s} {change:>10.2f}')
     print('\n')
 
 portfolio = read_portfolio('Data/portfolio.csv')
@@ -96,4 +96,8 @@ else:
 
 report = make_report(portfolio, current_price)
 
+headers = ('Name', 'Shares', 'Price', 'Change')
+seperate_string = '---------- ---------- ---------- -----------'
+print(f'{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}')
+print(seperate_string)
 print_report(report)
