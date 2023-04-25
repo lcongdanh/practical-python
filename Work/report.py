@@ -79,9 +79,6 @@ def print_report(report: list):
 portfolio = read_portfolio('Data/portfolio.csv')
 current_price = read_prices('Data/prices.csv')
 
-print(portfolio,'\n')
-print(current_price,'\n')
-
 """ portfolio_price = compute_portfolio_price(portfolio)
 print('The portfolio price:', portfolio_price)
 
