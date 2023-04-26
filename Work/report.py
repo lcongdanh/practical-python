@@ -2,6 +2,7 @@
 #
 # Exercise 2.4
 import csv
+import sys
 from fileparse import parse_csv
 
 
@@ -50,17 +51,27 @@ def make_report(portfolio: list, prices: list):
 def print_report(report: list):
     for name, shares, price, change in report:
         print(f'{name:>10s} {shares:>10d} {"$"+str(price):>10s} {change:>10.2f}')
-    print('\n')
-
-portfolio = read_portfolio('Data/portfolio.csv')
-current_price = read_prices('Data/prices.csv')
-report = make_report(portfolio, current_price)
 
 
-headers = ('Name', 'Shares', 'Price', 'Change')
-seperate_string = '---------- ---------- ---------- -----------'
+def main():
+    if len(sys.argv) != 3:
+        raise SystemExit(f'Usage: {sys.argv[0]} ' 'report file')
+    
+    portfolio_file = sys.argv[1]
+    prices_file = sys.argv[2]
+
+    portfolio = read_portfolio(portfolio_file)     # 'Data/portfolio.csv'
+    current_price = read_prices(prices_file)       # 'Data/prices.csv'
+    report = make_report(portfolio, current_price)
+
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    seperate_string = '---------- ---------- ---------- -----------'
+
+    print(f'{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}')
+    print(seperate_string)
+    print_report(report)
+
+if __name__ == '__main__':
+    main()
 
 
-""" print(f'{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}')
-print(seperate_string)
-print_report(report) """

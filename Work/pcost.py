@@ -3,6 +3,7 @@
 # Exercise 1.27
 import csv
 from report import read_portfolio
+import sys
 
 def portfolio_cost(filename):
     stocks = read_portfolio(filename)
@@ -17,7 +18,14 @@ def portfolio_cost(filename):
 
     return total
 
-filename = 'Data/portfolio.csv'
 
-cost = portfolio_cost(filename)
-print('Total cost:', cost)
+def main():
+    if len(sys.argv) != 2:
+        raise SystemExit(f'Usage: {sys.argv[0]} ' 'pcost file')
+    
+    portfolio_file = sys.argv[1]
+    cost = portfolio_cost(portfolio_file)
+    print('Total cost:', cost)
+
+if __name__ == '__main__':
+    main()
