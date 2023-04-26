@@ -2,25 +2,22 @@
 #
 # Exercise 1.27
 import csv
+from report import read_portfolio
 
 def portfolio_cost(filename):
-    print(f'File name: {filename}')
-    with open(filename, 'rt') as f:
-        lines = csv.reader(f)
-        header = next(lines)
-        total = 0.0
-        for lineno, line in enumerate(lines, start = 1):
-            stock = dict(zip(header,line))
-            try:
-                share = int(stock['shares'])
-                price = float(stock['price'])
-                total += + share * price
-            except ValueError:
-                print(f'Line: {lineno}: Bad line: {line}')
+    stocks = read_portfolio(filename)
+    total = 0.0
+    for lineno, stock in enumerate(stocks, start = 1):
+        try:
+            share = stock['shares']
+            price = stock['price']
+            total += + share * price
+        except ValueError:
+            print(f'Line: {lineno}: Bad line: {stock}')
 
     return total
 
-filename = 'Data/portfoliodate.csv'
+filename = 'Data/portfolio.csv'
 
 cost = portfolio_cost(filename)
 print('Total cost:', cost)
