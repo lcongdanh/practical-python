@@ -4,12 +4,21 @@
 import csv
 import sys
 from fileparse import parse_csv
+from stock import Stock
 
 
-def read_portfolio(filename): 
+def read_portfolio(filename):
     '''Read the portfolio from the file and return a list of dict'''
     with open(filename) as lines:
-        return parse_csv(lines, types = [str, int, float])
+        stocks = parse_csv(lines, types = [str, int, float])
+
+    stock_instances = []
+    for s in stocks:
+        holding = Stock(s['name'], s['shares'], s['price'])
+        stock_instances.append(holding)
+
+    return stock_instances
+
 
 def read_prices(filename):
     '''Read the stock prices from prices.csv return a dict'''
@@ -33,16 +42,16 @@ def compute_portfolio_current_value(portfolio: list, current_price: dict):
     return total_value
 
 def make_report(portfolio: list, prices: list):
-    '''take lists of portfolio dicts and dict of prices, return a list of tuples of stock report'''
+    '''take a lists of objects and a dict of prices, return a list of tuples'''
     stock_report = []
     for stock in portfolio:
         for stock_price in prices:
             holding = []
-            if stock['name'] == stock_price[0]:
-                holding.append(stock['name'])
-                holding.append(stock['shares'])
-                holding.append(stock['price'])
-                price_change = round((stock_price[1] - stock['price']), 2)
+            if stock.name == stock_price[0]:
+                holding.append(stock.name)
+                holding.append(stock.shares)
+                holding.append(stock.price)
+                price_change = round((stock_price[1] - stock.price), 2)
                 holding.append(price_change)
                 stock_report.append(tuple(holding))
                     
