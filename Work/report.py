@@ -5,6 +5,7 @@ import csv
 import sys
 from fileparse import parse_csv
 from stock import Stock
+import tableformat
 
 
 def read_portfolio(filename):
@@ -50,35 +51,42 @@ def make_report(portfolio: list, prices: list):
             if stock.name == stock_price[0]:
                 holding.append(stock.name)
                 holding.append(stock.shares)
-                holding.append(stock.price)
+                holding.append(stock_price[1])
                 price_change = round((stock_price[1] - stock.price), 2)
                 holding.append(price_change)
                 stock_report.append(tuple(holding))
                     
     return stock_report
 
-def print_report(report: list):
-    for name, shares, price, change in report:
-        print(f'{name:>10s} {shares:>10d} {"$"+str(price):>10s} {change:>10.2f}')
+def print_report(portfolio_report, formatter):
+
+    '''
+    Print a nicely formatted table from a list of (name, shares, price, change) tuples.
+    '''
+    formatter.headings(['Name','Shares','Price','Change'])
+    for name, shares, price, change in portfolio_report:
+        rowdata = [name, str(shares), f'{price:0.2f}', f'{change:0.2f}']
+        formatter.row(rowdata)
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         raise SystemExit(f'Usage: {sys.argv[0]} ' 'report file')
-    
+    # Get argv
     portfolio_file = sys.argv[1]
     prices_file = sys.argv[2]
+    fmt = sys.argv[3]
 
-    portfolio = read_portfolio(portfolio_file)     # 'Data/portfolio.csv'
-    current_price = read_prices(prices_file)       # 'Data/prices.csv'
+    # Read data files
+    portfolio = read_portfolio(portfolio_file)
+    current_price = read_prices(prices_file)
+    
+    # Greate the report
     report = make_report(portfolio, current_price)
-
-    headers = ('Name', 'Shares', 'Price', 'Change')
-    seperate_string = '---------- ---------- ---------- -----------'
-
-    print(f'{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}')
-    print(seperate_string)
-    print_report(report)
+    
+    # Print data
+    formatter = tableformat.create_formatter(fmt)
+    print_report(report, formatter)
 
 if __name__ == '__main__':
     main()
