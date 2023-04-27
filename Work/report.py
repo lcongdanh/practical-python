@@ -8,13 +8,13 @@ from fileparse import parse_csv
 
 def read_portfolio(filename): 
     '''Read the portfolio from the file and return a list of dict'''
-    portfolio = parse_csv(filename, types = [str, int, float])
-    return portfolio
+    with open(filename) as lines:
+        return parse_csv(lines, types = [str, int, float])
 
 def read_prices(filename):
     '''Read the stock prices from prices.csv return a dict'''
-    stock_prices = parse_csv(filename, types = [str, float], has_headers=False) # return a list of tuple
-    return stock_prices
+    with open(filename) as lines:
+        return parse_csv(lines, types = [str, float], has_headers = False) # return a list of tuple
 
 def compute_portfolio_price(portfolio: list):
     total_price = 0.0
@@ -73,5 +73,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
