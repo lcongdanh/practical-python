@@ -59,3 +59,9 @@ def create_formatter(fmt):
         raise RuntimeError(f'Unkown format {fmt}')
     
     return formatter
+
+def print_table(objects, columns, formatter):
+    formatter.headings(columns)
+    for obj in objects:
+        rowdata = [str(getattr(obj, name)) for name in columns]
+        formatter.row(rowdata)
