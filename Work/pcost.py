@@ -2,20 +2,12 @@
 #
 # Exercise 1.27
 import csv
-from report import read_portfolio
+import report
 import sys
 
 def portfolio_cost(filename):
-    stocks = read_portfolio(filename)
-    total = 0.0
-    for lineno, stock in enumerate(stocks, start = 1):
-        try:
-            total += stock.shares * stock.price
-        except ValueError:
-            print(f'Line: {lineno}: Bad line: {stock}')
-
-    return total
-
+    portfolio = report.read_portfolio(filename)
+    return portfolio.total_cost
 
 def main():
     if len(sys.argv) != 2:
